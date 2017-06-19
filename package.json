@@ -1,0 +1,16 @@
+{
+  "name": "graphql-editor",
+  "private": true,
+  "scripts": {
+    "start": "meteor run"
+  },
+  "dependencies": {
+    "babel-runtime": "^6.20.0",
+    "express-graphql": "^0.6.6",
+    "graphiql": "^0.10.2",
+    "meteor-node-stubs": "~0.2.4",
+    "prop-types": "^15.5.10",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1"
+  }
+}
