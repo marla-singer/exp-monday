@@ -1,0 +1,16 @@
+<head>
+  <title>Graphql editor</title>
+</head>
+
+<body>
+  <h1>Welcome to Meteor!</h1>
+
+  {{> editor}}
+</body>
+
+
+<template name="editor">
+    <div id="graphiql">
+      {{> React component=GraphiQL fetcher=graphFetcher }}
+    </div>
+</template>
