@@ -1,0 +1,1307 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "APinf is open source API management and catalog. ",
+        "version": "1.0.0",
+        "title": "Admin API"
+    },
+    "paths": {
+        "/apis": {
+            "post": {
+                "tags": [
+                    "APIs"
+                ],
+                "summary": "Add new API to catalog.",
+                "description": "Adds an API to catalog. On success, returns newly added API object.",
+                "parameters": [
+                    {
+                        "name": "api",
+                        "in": "body",
+                        "description": "Data for adding or editing API",
+                        "schema": {
+                            "$ref": "#/definitions/api"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "API successfully added"
+                    },
+                    "401": {
+                        "description": "Authentication is required"
+                    }
+                },
+                "security": [
+                    {
+                        "userSecurityToken": [],
+                        "userId": []
+                    }
+                ]
+            },
+            "get": {
+                "tags": [
+                    "APIs"
+                ],
+                "summary": "List and search public APIs.",
+                "description": "List and search public APIs.",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "An optional search string for looking up inventory.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "organization",
+                        "in": "query",
+                        "description": "An optional organization id will limit results to the given organization.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "skip",
+                        "in": "query",
+                        "description": "Number of records to skip for pagination.",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32",
+                        "minimum": 0
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Maximum number of records to return in query.",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32",
+                        "minimum": 0,
+                        "maximum": 50
+                    },
+                    {
+                        "name": "lifecycle",
+                        "in": "query",
+                        "description": "Limit the listing based on lifecycle status of APIs.",
+                        "required": false,
+                        "type": "string",
+                        "enum": [
+                            "design",
+                            "development",
+                            "testing",
+                            "production",
+                            "deprecated"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns list of public APIs",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "example": "success"
+                                },
+                                "data": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/definitions/api"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad query parameters"
+                    }
+                }
+            }
+        },
+        "/apis/{id}": {
+            "get": {
+                "tags": [
+                    "APIs"
+                ],
+                "summary": "Fetch API with specified ID",
+                "description": "Returns one API with specified ID or nothing if there is not match found",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of API",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns API"
+                    },
+                    "404": {
+                        "description": "Bad parameter"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "APIs"
+                ],
+                "summary": "Update API",
+                "description": "Update an API",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of API",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "api",
+                        "in": "body",
+                        "description": "Data for adding or editing API",
+                        "schema": {
+                            "$ref": "#/definitions/api"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "API successfully edited."
+                    },
+                    "401": {
+                        "description": "Authentication is required"
+                    },
+                    "403": {
+                        "description": "User does not have permission"
+                    },
+                    "404": {
+                        "description": "API is not found"
+                    }
+                },
+                "security": [
+                    {
+                        "userSecurityToken": [],
+                        "userId": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "APIs"
+                ],
+                "summary": "Delete API.",
+                "description": "Deletes the identified API from the system.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of API",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "API successfully removed."
+                    },
+                    "401": {
+                        "description": "Authentication is required"
+                    },
+                    "403": {
+                        "description": "User does not have permission"
+                    },
+                    "404": {
+                        "description": "API is not found"
+                    }
+                },
+                "security": [
+                    {
+                        "userSecurityToken": [],
+                        "userId": []
+                    }
+                ]
+            }
+        },
+        "/organizations": {
+            "get": {
+                "tags": [
+                    "Organizations"
+                ],
+                "summary": "List and search organizations.",
+                "description": "List and search organizations.",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "An optional search string for looking up inventory.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "skip",
+                        "in": "query",
+                        "description": "Number of records to skip for pagination.",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32",
+                        "minimum": 0
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Maximum number of records to return in query.",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32",
+                        "minimum": 0,
+                        "maximum": 50
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns list of organizations"
+                    },
+                    "400": {
+                        "description": "Bad query parameters"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Organizations"
+                ],
+                "summary": "Add Organization to catalog.",
+                "description": "Adds an Organization to catalog. On success, returns newly added object.",
+                "parameters": [
+                    {
+                        "name": "organization",
+                        "in": "body",
+                        "description": "Data for adding or editing Organization",
+                        "schema": {
+                            "$ref": "#/definitions/organization"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Organization successfully added"
+                    },
+                    "401": {
+                        "description": "Authentication is required"
+                    },
+                    "403": {
+                        "description": "User does not have permission"
+                    }
+                },
+                "security": [
+                    {
+                        "userSecurityToken": [],
+                        "userId": []
+                    }
+                ]
+            }
+        },
+        "/organizations/{id}": {
+            "get": {
+                "tags": [
+                    "Organizations"
+                ],
+                "summary": "Fetch Organization with specified ID",
+                "description": "Returns one Organization with specified ID or nothing if not match found",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of Organization",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns Organization"
+                    },
+                    "404": {
+                        "description": "Bad parameter"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Organizations"
+                ],
+                "summary": "Update Organization",
+                "description": "Update an Organization",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of Organization",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "organization",
+                        "in": "body",
+                        "description": "Data for adding or editing Organization",
+                        "schema": {
+                            "$ref": "#/definitions/organization"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Organization successfully edited."
+                    },
+                    "401": {
+                        "description": "Authentication is required"
+                    },
+                    "403": {
+                        "description": "User does not have permission"
+                    },
+                    "404": {
+                        "description": "Organization is not found"
+                    }
+                },
+                "security": [
+                    {
+                        "userSecurityToken": [],
+                        "userId": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Organizations"
+                ],
+                "summary": "Delete identified Organization from catalog.",
+                "description": "Deletes the identified Organization from catalog.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of Organization",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Organization successfully removed."
+                    },
+                    "401": {
+                        "description": "Authentication is required"
+                    },
+                    "403": {
+                        "description": "User does not have permission"
+                    },
+                    "404": {
+                        "description": "Organization is not found"
+                    }
+                },
+                "security": [
+                    {
+                        "userSecurityToken": [],
+                        "userId": []
+                    }
+                ]
+            }
+        },
+        "/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "List and search users.",
+                "description": "By passing options you can search users in system.",
+                "produces": "application/json",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "X-Auth-Token",
+                        "in": "header",
+                        "description": "Authentication Token",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "An optional search string for looking up inventory.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "organization_id",
+                        "in": "query",
+                        "description": "ID of Organization, that User belongs to",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "skip",
+                        "in": "query",
+                        "description": "Number of records to skip for pagination.",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32",
+                        "minimum": 0
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Maximum number of records to return in query.",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32",
+                        "minimum": 0,
+                        "maximum": 50
+                    },
+                    {
+                        "name": "sort_by",
+                        "in": "query",
+                        "description": "Criteria for sort ",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "example": "success"
+                                },
+                                "data": {
+                                    "type": "object",
+                                    "properties": {
+                                        "_id": {
+                                            "type": "string",
+                                            "example": "7L4jNtdfNFGH3igPs"
+                                        },
+                                        "created_at": {
+                                            "$ref": "#/definitions/get_user_created_at"
+                                        },
+                                        "username": {
+                                            "type": "string",
+                                            "example": "myusername"
+                                        },
+                                        "emails": {
+                                            "$ref": "#/definitions/post_user_email_address"
+                                        },
+                                        "profile": {
+                                            "$ref": "#/definitions/get_user_profile"
+                                        },
+                                        "roles": {
+                                            "$ref": "#/definitions/get_user_roles"
+                                        },
+                                        "organization": {
+                                            "$ref": "#/definitions/get_user_organization"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad query parameters"
+                    },
+                    "401": {
+                        "description": "Authentication is required"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Adds a new user.",
+                "description": "Adds a new user. On success, returns newly added object.",
+                "produces": "application/json",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "body",
+                        "description": "Data for adding a new User",
+                        "schema": {
+                            "$ref": "#/definitions/user_addition"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "User successfully added",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "example": "success"
+                                },
+                                "data": {
+                                    "type": "object",
+                                    "properties": {
+                                        "_id": {
+                                            "type": "string",
+                                            "example": "7L4jNtdfNFGH3igPs"
+                                        },
+                                        "created_at": {
+                                            "$ref": "#/definitions/get_user_created_at"
+                                        },
+                                        "username": {
+                                            "type": "string",
+                                            "example": "myusername"
+                                        },
+                                        "emails": {
+                                            "$ref": "#/definitions/post_user_email_address"
+                                        },
+                                        "profile": {
+                                            "$ref": "#/definitions/get_user_profile"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input, object invalid"
+                    },
+                    "401": {
+                        "description": "Authentication is required"
+                    },
+                    "409": {
+                        "description": "User already exists"
+                    }
+                },
+                "security": [
+                    {
+                        "userSecurityToken": [],
+                        "userId": []
+                    }
+                ]
+            }
+        },
+        "/users/{id}": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Search Users one by one with userID.",
+                "description": "Returns user data with given ID.",
+                "produces": "application/json",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "X-Auth-Token",
+                        "in": "header",
+                        "description": "Authentication Token",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of User",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data of identified user.",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "example": "success"
+                                },
+                                "data": {
+                                    "type": "object",
+                                    "properties": {
+                                        "_id": {
+                                            "type": "string",
+                                            "example": "7L4jNtdfNFGH3igPs"
+                                        },
+                                        "created_at": {
+                                            "$ref": "#/definitions/get_user_created_at"
+                                        },
+                                        "username": {
+                                            "type": "string",
+                                            "example": "myusername"
+                                        },
+                                        "emails": {
+                                            "$ref": "#/definitions/post_user_email_address"
+                                        },
+                                        "profile": {
+                                            "$ref": "#/definitions/get_user_profile"
+                                        },
+                                        "roles": {
+                                            "$ref": "#/definitions/get_user_roles"
+                                        },
+                                        "organization": {
+                                            "$ref": "#/definitions/get_user_organization"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication is required"
+                    },
+                    "403": {
+                        "description": "User does not have permission."
+                    },
+                    "404": {
+                        "description": "No user found with given UserID."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Delete Users one by one with userID.",
+                "description": "Deletes the identified User.",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "X-Auth-Token",
+                        "in": "header",
+                        "description": "Authentication Token",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of User",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User deleted."
+                    },
+                    "400": {
+                        "description": "Invalid input, invalid object"
+                    },
+                    "401": {
+                        "description": "Authentication is required"
+                    },
+                    "403": {
+                        "description": "User does not have permission"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                },
+                "security": [
+                    {
+                        "userSecurityToken": [],
+                        "userId": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update User's data.",
+                "description": "Updates data of a User indicated by user ID.",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "X-Auth-Token",
+                        "in": "header",
+                        "description": "Authentication Token",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of User",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user",
+                        "in": "body",
+                        "description": "Data for updating a User",
+                        "schema": {
+                            "$ref": "#/definitions/user_update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User successfully updated."
+                    },
+                    "400": {
+                        "description": "Invalid input, object invalid, Erroneous new password"
+                    },
+                    "401": {
+                        "description": "Authentication is required"
+                    },
+                    "403": {
+                        "description": "User does not have permission"
+                    },
+                    "404": {
+                        "description": "No user found with given UserID"
+                    }
+                },
+                "security": [
+                    {
+                        "userSecurityToken": [],
+                        "userId": []
+                    }
+                ]
+            }
+        },
+        "/users/updates": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "List and search user based on addition date",
+                "description": "Returns users based on addition date",
+                "produces": "application/json",
+                "parameters": [
+                    {
+                        "name": "X-User-Id",
+                        "in": "header",
+                        "description": "User ID for authentication",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "X-Auth-Token",
+                        "in": "header",
+                        "description": "Authentication Token",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "since",
+                        "in": "query",
+                        "description": "Time frame in days",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32",
+                        "minimum": 1
+                    },
+                    {
+                        "name": "organization_id",
+                        "in": "query",
+                        "description": "ID of Organization, that User belongs to",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "skip",
+                        "in": "query",
+                        "description": "Number of records to skip for pagination.",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32",
+                        "minimum": 0
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Maximum number of records to return in query.",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32",
+                        "minimum": 0,
+                        "maximum": 50
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "example": "success"
+                                },
+                                "data": {
+                                    "type": "object",
+                                    "properties": {
+                                        "_id": {
+                                            "type": "string",
+                                            "example": "7L4jNtdfNFGH3igPs"
+                                        },
+                                        "created_at": {
+                                            "$ref": "#/definitions/get_user_created_at"
+                                        },
+                                        "username": {
+                                            "type": "string",
+                                            "example": "myusername"
+                                        },
+                                        "emails": {
+                                            "$ref": "#/definitions/post_user_email_address"
+                                        },
+                                        "profile": {
+                                            "$ref": "#/definitions/get_user_profile"
+                                        },
+                                        "roles": {
+                                            "$ref": "#/definitions/get_user_roles"
+                                        },
+                                        "organization": {
+                                            "$ref": "#/definitions/get_user_organization"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad query parameters"
+                    },
+                    "401": {
+                        "description": "Authentication is required"
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": [
+                    "Login"
+                ],
+                "summary": "Logging in.",
+                "description": "By giving existing username and password you get login credentials.",
+                "produces": "application/json",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "body",
+                        "description": "User login data",
+                        "schema": {
+                            "$ref": "#/definitions/user_login"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "status": {
+                                    "type": "string",
+                                    "example": "success"
+                                },
+                                "data": {
+                                    "type": "object",
+                                    "properties": {
+                                        "authToken": {
+                                            "type": "string",
+                                            "example": "7L4jNt-dfNFGH3igPslP5VMH0-hrnbMSFtmjfVOMm_zVg0yT8eGQ-"
+                                        },
+                                        "userId": {
+                                            "type": "string",
+                                            "example": "GFJzMtdzqEYgH8PHSQ-"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad query parameters"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "userSecurityToken": {
+            "in": "header",
+            "name": "X-Auth-Token",
+            "type": "apiKey"
+        },
+        "userId": {
+            "in": "header",
+            "name": "X-User-Id",
+            "type": "apiKey"
+        }
+    },
+    "host": "nightly.apinf.io",
+    "basePath": "/rest/v1",
+    "schemes": [
+        "https"
+    ],
+    "definitions": {
+        "api": {
+            "required": [
+                "name",
+                "url"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "example": "My REST API"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "My REST API description"
+                },
+                "url": {
+                    "type": "string",
+                    "format": "url",
+                    "example": "https://my.rest.api.com/v1"
+                },
+                "lifecycleStatus": {
+                    "type": "string",
+                    "enum": [
+                        "design",
+                        "development",
+                        "testing",
+                        "production",
+                        "deprecated"
+                    ]
+                }
+            }
+        },
+        "organization": {
+            "required": [
+                "name",
+                "url"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "example": "Company"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "Description about company"
+                },
+                "url": {
+                    "type": "string",
+                    "format": "url",
+                    "example": "https://organization.com"
+                },
+                "contact_name": {
+                    "type": "string",
+                    "description": "Name of company manager",
+                    "example": "David Bar"
+                },
+                "contact_phone": {
+                    "type": "string",
+                    "description": "Phone number of company manager",
+                    "example": "+7 000 000 00 00"
+                },
+                "contact_email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "E-mail address of company manager",
+                    "example": "company-mail@gmail.com"
+                },
+                "facebook": {
+                    "type": "string",
+                    "format": "url",
+                    "description": "Link to Facebook",
+                    "example": "http://url.com"
+                },
+                "twitter": {
+                    "type": "string",
+                    "format": "url",
+                    "description": "Link to Twitter",
+                    "example": "http://url.com"
+                },
+                "instagram": {
+                    "type": "string",
+                    "format": "url",
+                    "description": "Link to Instagram",
+                    "example": "http://url.com"
+                },
+                "linkedin": {
+                    "type": "string",
+                    "format": "url",
+                    "description": "Link to Linked In",
+                    "example": "http://url.com"
+                }
+            }
+        },
+        "users": {
+            "required": [
+                "username",
+                "email",
+                "password"
+            ],
+            "properties": {
+                "username": {
+                    "type": "string",
+                    "description": "Username",
+                    "example": "johndoe"
+                },
+                "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "E-mail address of user",
+                    "example": "john.doe@ispname.com"
+                },
+                "password": {
+                    "type": "string",
+                    "description": "Password for user",
+                    "example": "mypassword"
+                },
+                "company": {
+                    "type": "string",
+                    "description": "Company name of user",
+                    "example": "My Company Ltd"
+                }
+            }
+        },
+        "user_addition": {
+            "required": [
+                "username",
+                "email",
+                "password"
+            ],
+            "properties": {
+                "username": {
+                    "type": "string",
+                    "description": "Username",
+                    "example": "johndoe"
+                },
+                "email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "E-mail address of user",
+                    "example": "john.doe@ispname.com"
+                },
+                "password": {
+                    "type": "string",
+                    "description": "Password for user",
+                    "example": "mypassword"
+                }
+            }
+        },
+        "user_login": {
+            "required": [
+                "username",
+                "password"
+            ],
+            "properties": {
+                "username": {
+                    "type": "string",
+                    "description": "Username",
+                    "example": "johndoe"
+                },
+                "password": {
+                    "type": "string",
+                    "description": "Password for user",
+                    "example": "mypassword"
+                }
+            }
+        },
+        "user_update": {
+            "required": [
+                "username",
+                "company",
+                "password"
+            ],
+            "properties": {
+                "username": {
+                    "type": "string",
+                    "description": "Username",
+                    "example": "johndoe"
+                },
+                "company": {
+                    "type": "string",
+                    "description": "Name of company user belongs to",
+                    "example": "Mighty API owners Ltd."
+                },
+                "password": {
+                    "type": "string",
+                    "description": "Password for user",
+                    "example": "mypassword"
+                }
+            }
+        },
+        "get_user_profile": {
+            "type": "object",
+            "properties": {
+                "company": {
+                    "type": "string",
+                    "example": "Mighty API owners Ltd."
+                }
+            }
+        },
+        "get_user_created_at": {
+            "type": "string",
+            "example": "2012-07-14T01:00:00+01:00",
+            "description": "Dates and times are stored in ISODate format"
+        },
+        "post_user_email_address": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "address": {
+                        "type": "string",
+                        "example": "sam.won@apinf.io"
+                    },
+                    "verified": {
+                        "type": "string",
+                        "example": "false"
+                    }
+                }
+            }
+        },
+        "get_user_roles": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "example": "manager"
+            }
+        },
+        "get_user_data": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "_id": {
+                            "type": "string",
+                            "example": "7L4jNtdfNFGH3igPs"
+                        },
+                        "created_at": {
+                            "$ref": "#/definitions/get_user_created_at"
+                        },
+                        "username": {
+                            "type": "string",
+                            "example": "myusername"
+                        },
+                        "emails": {
+                            "$ref": "#/definitions/post_user_email_address"
+                        },
+                        "profile": {
+                            "$ref": "#/definitions/get_user_profile"
+                        },
+                        "roles": {
+                            "$ref": "#/definitions/get_user_roles"
+                        },
+                        "organization": {
+                            "$ref": "#/definitions/get_user_organization"
+                        }
+                    }
+                }
+            }
+        },
+        "get_user_organization": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "organization_id": {
+                        "type": "string",
+                        "example": "eFsLsJH3JTos4HfLc"
+                    },
+                    "organization_name": {
+                        "type": "string",
+                        "example": "APInf oy"
+                    }
+                }
+            }
+        },
+        "post_user_response": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "_id": {
+                            "type": "string",
+                            "example": "7L4jNtdfNFGH3igPs"
+                        },
+                        "created_at": {
+                            "$ref": "#/definitions/get_user_created_at"
+                        },
+                        "username": {
+                            "type": "string",
+                            "example": "myusername"
+                        },
+                        "emails": {
+                            "$ref": "#/definitions/post_user_email_address"
+                        },
+                        "profile": {
+                            "$ref": "#/definitions/get_user_profile"
+                        }
+                    }
+                }
+            }
+        },
+        "user_login_response": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string",
+                    "example": "success"
+                },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "authToken": {
+                            "type": "string",
+                            "example": "7L4jNt-dfNFGH3igPslP5VMH0-hrnbMSFtmjfVOMm_zVg0yT8eGQ-"
+                        },
+                        "userId": {
+                            "type": "string",
+                            "example": "GFJzMtdzqEYgH8PHSQ-"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

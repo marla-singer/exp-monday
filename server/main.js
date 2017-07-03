@@ -1,5 +1,18 @@
 import graphqlHTTP  from 'express-graphql';
-import schema from '../lib/schema';
+import graphQLSchema from 'swagger-to-graphql';
 
-// Listen to incoming HTTP requests (can only be used on the server).
-WebApp.connectHandlers.use('/graphql', graphqlHTTP(() => ({ schema, graphiql: true })));
+let defaultSchema;
+
+graphQLSchema('/home/daria/develop/graphql/swagger.json')
+    .then(schema => defaultSchema = schema)
+    .catch(e => console.error(e));
+
+WebApp.connectHandlers.use('/graphql', graphqlHTTP(() => (
+    { 
+        schema: defaultSchema,
+        context: {
+                GQLProxyBaseUrl: 'https://nightly.apinf.io/rest/v1',
+        },
+        graphiql: true,
+    }
+)));
